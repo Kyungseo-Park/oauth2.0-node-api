@@ -1,0 +1,66 @@
+{
+  "env": {
+    "es6": true,
+    "node": true
+  },
+  "parserOptions": {
+    "ecmaVersion": 2018
+  },
+  "extends": [
+    "eslint:recommended",
+    "google"
+  ],
+  "plugins": [
+    "import",
+    "jsdoc",
+    "promise"
+  ],
+  "rules": {
+    "semi": "error",
+    "no-unused-vars": "warn",
+    "require-jsdoc": "off",
+    "max-len": [
+      "error",
+      {
+        "code": 120,
+        "ignoreComments": true,
+        "ignoreUrls": true,
+        "ignoreStrings": true,
+        "ignoreTemplateLiterals": true
+      }
+    ],
+    "import/no-unresolved": "error",
+    "import/named": "error",
+    "import/namespace": "error",
+    "import/default": "error",
+    "import/export": "error",
+    "jsdoc/check-param-names": "error",
+    "jsdoc/check-tag-names": [
+      "error",
+      {
+        "definedTags": [
+          "api",
+          "param",
+          "returns",
+          "yield",
+          "yields"
+        ]
+      }
+    ],
+    "jsdoc/check-types": "error",
+    "jsdoc/require-param-type": "off",
+    "jsdoc/require-returns-type": "off",
+    "promise/catch-or-return": "error",
+    "promise/no-callback-in-promise": "error",
+    "promise/no-nesting": "error",
+    "promise/param-names": "error"
+  },
+  "dependencies": {
+    "axios": "^1.4.0",
+    "bcrypt": "^5.1.0",
+    "jsonwebtoken": "^9.0.0",
+    "morgan": "^1.10.0",
+    "mysql2": "^3.2.4",
+    "qs": "^6.11.1"
+  }
+}
