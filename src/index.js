@@ -1,44 +1,42 @@
 const express = require('express');
 const morgan = require('morgan');
+const cookieParser = require('cookie-parser');
+
 const authorizationRouter = require('./routes/authRoute');
 
 class App {
   constructor() {
-    this.apiServer = express();
-    this.authServer = express();
+    this.app = express();
     this.middleWares();
     this.routes();
     this.errorHandlers();
   }
 
   middleWares() {
-    this.apiServer.use(express.json());
-    this.apiServer.use(morgan('dev'));
+    this.app.use(express.json());
+    this.app.use(cookieParser());
+    this.app.use(express.urlencoded({ extended: false }));
+    this.app.use(morgan('dev'));
   }
 
   routes() {
-    this.apiServer.use('authorization', authorizationRouter);
-    this.authServer.use('authorization', authorizationRouter);
+    this.app.use('/authorization', authorizationRouter);
   }
 
   errorHandlers() {
-    this.apiServer.use((err, req, res, next) => {
+    this.app.use((err, req, res, next) => {
       console.error(err.stack);
       res.status(500).send('Something broke!');
     });
   }
 
   start(apiPort, authPort) {
-    this.apiServer.listen(apiPort, () => {
+    this.app.listen(apiPort, () => {
       console.log(`Server is listening on port ${apiPort}`);
-    });
-
-    this.authServer.listen(authPort, () => {
-      console.log(`Server is listening on port ${port}`);
     });
   }
 }
 
 const app = new App();
 
-app.start(3000, 3001);
+app.start(3000);

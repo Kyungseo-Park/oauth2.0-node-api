@@ -4,9 +4,9 @@ class UserRepository {
   constructor() {
     this.pool = mysql.createPool({
       host: 'localhost',
-      user: 'root',
+      user: 'elice',
       password: 'password',
-      database: 'mydb',
+      database: 'oauth2',
       waitForConnections: true,
       connectionLimit: 10,
       queueLimit: 0,
@@ -43,9 +43,23 @@ class UserRepository {
       conn.release();
     }
   }
+
+  async findUserById(userId) {
+    const conn = await this.pool.getConnection();
+    
+    try {
+      const [rows] = await conn.query('SELECT * FROM users WHERE id = ?', [userId]);
+      if (rows.length === 0) {
+        return null;
+      }
+      return rows[0];
+    } catch (err) {
+      console.error(err);
+      throw err;
+    } finally {
+      conn.release();
+    }
+  }
 }
 
-// 싱글톤 인스턴스
-const userRepository = new UserRepository();
-
-module.exports = userRepository;
+module.exports = new UserRepository();
