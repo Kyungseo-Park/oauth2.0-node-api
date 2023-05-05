@@ -2,8 +2,6 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const userRepository = require('../repositories/userRepository');
 
-const JWT_SECRET_KEY = 'mysecretkey';
-
 class AuthService {
   constructor() {
     if (!AuthService.instance) {
@@ -47,7 +45,7 @@ class AuthService {
 
   async validateLoginByGrantTypeRefreshToken(refreshToken) {
     try {
-      const decoded = jwt.verify(refreshToken, JWT_SECRET_KEY);
+      const decoded = jwt.verify(refreshToken, process.env.JWT_SECRET_KEY);
       const user = await userRepository.findUserById(decoded.userId);
       if (!user) {
         throw new Error(`401 error: 'invalid_grant'`)
@@ -59,13 +57,13 @@ class AuthService {
 
   async createAccessTokenByRefreshToken(refreshToken) {
     try {
-      const decoded = jwt.verify(refreshToken, JWT_SECRET_KEY);
+      const decoded = jwt.verify(refreshToken, process.env.JWT_SECRET_KEY);
       const user = await userRepository.findUserById(decoded.userId);
       if (!user) {
         throw new Error(`401 error: 'invalid_grant'`)
       }
 
-      const token = jwt.sign({ sub: user.id }, JWT_SECRET_KEY, { algorithm: 'HS256', expiresIn: '1h' });
+      const token = jwt.sign({ sub: user.id }, process.env.JWT_SECRET_KEY, { algorithm: 'HS256', expiresIn: '1h' });
       return token;
     } catch (error) {
       console.log(error);
@@ -79,7 +77,7 @@ class AuthService {
       throw new Error(`401 error: 'invalid_grant'`)
     }
 
-    const accessToken = jwt.sign({ userId: user.id }, JWT_SECRET_KEY, { expiresIn: '1h' });
+    const accessToken = jwt.sign({ userId: user.id }, process.env.JWT_SECRET_KEY, { expiresIn: '1h' });
 
     return accessToken;
   }
@@ -98,14 +96,14 @@ class AuthService {
     }
 
     // Create and sign token
-    const token = jwt.sign({ userId: user.id }, JWT_SECRET_KEY, { expiresIn: '1h' });
+    const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET_KEY, { expiresIn: '1h' });
 
     return { token };
   }
 
   async verifyToken(token) {
     try {
-      const decodedToken = jwt.verify(token, JWT_SECRET_KEY);
+      const decodedToken = jwt.verify(token, process.env.JWT_SECRET_KEY);
       return decodedToken.userId;
     } catch (error) {
       throw new Error('Invalid token');

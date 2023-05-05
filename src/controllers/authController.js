@@ -3,17 +3,6 @@ const qs = require('qs');
 const axios = require('axios');
 const AuthService = require('../services/authService');
 
-const JWT_SECRET_KEY = 'mysecretkey';
-
-// OAuth 2.0 클라이언트 ID와 시크릿
-const CLIENT_ID = 'your_client_id';
-const CLIENT_SECRET = 'your_client_secret';
-const REDIRECT_URI = 'http://localhost:3000/callback';
-
-// OAuth 2.0 인증 서버 URL
-const AUTH_SERVER = 'https://oauth.example.com';
-const AUTH_URL = `${AUTH_SERVER}/authorize`;
-const TOKEN_URL = `${AUTH_SERVER}/token`;
 
 class AuthController {
     constructor() {
@@ -66,13 +55,13 @@ class AuthController {
 
     async auth(req, res) {
         const params = {
-            client_id: CLIENT_ID,
-            redirect_uri: REDIRECT_URI,
+            client_id: process.env.CLIENT_ID,
+            redirect_uri: process.env.REDIRECT_URI,
             response_type: 'code',
             scope: 'read write',
           };
       
-        const authUrl = `${AUTH_URL}?${qs.stringify(params)}`;
+        const authUrl = `${process.env.AUTH_URL}?${qs.stringify(params)}`;
         res.redirect(authUrl);
     }
 
@@ -83,14 +72,14 @@ class AuthController {
         const params = {
             grant_type: 'authorization_code',
             code: code,
-            redirect_uri: REDIRECT_URI,
-            client_id: CLIENT_ID,
-            client_secret: CLIENT_SECRET,
+            redirect_uri: process.env.REDIRECT_URI,
+            client_id: process.env.CLIENT_ID,
+            client_secret: process.env.CLIENT_SECRET,
         };
   
         // 액세스 토큰 요청
         try {
-            const { data } = await axios.post(TOKEN_URL, qs.stringify(params));
+            const { data } = await axios.post(process.env.TOKEN_URL, qs.stringify(params));
             const accessToken = data.access_token;
     
             const decodedToken = jwt.verify(accessToken, JWT_SECRET_KEY);
