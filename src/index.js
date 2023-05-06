@@ -1,42 +1,36 @@
-const express = require('express');
-const morgan = require('morgan');
-const cookieParser = require('cookie-parser');
+require('dotenv').config();
 
-const authorizationRouter = require('./routes/authRoute');
+const commander = require('commander');
+const pkg = require('../package.json');
+const authorizationServer = require('./authorization-api');
+const apiServer = require('./api');
 
-class App {
-  constructor() {
-    this.app = express();
-    this.middleWares();
-    this.routes();
-    this.errorHandlers();
-  }
+// CLI 인터페이스 설정
+commander
+  .version(pkg.version)
+  .option('-p, --port <n>', '포트 번호', parseInt)
+  .parse(process.argv);
 
-  middleWares() {
-    this.app.use(express.json());
-    this.app.use(cookieParser());
-    this.app.use(express.urlencoded({ extended: false }));
-    this.app.use(morgan('dev'));
-  }
 
-  routes() {
-    this.app.use('/authorization', authorizationRouter);
-  }
+if (commander.args.length === 0) {
+  commander.help();
+} else {
+  let port = commander.port || 3000;
+  if (commander.args[0] === 'auth') {
+    port = process.env.OAUTH_PORT || port
+    authorizationServer.start(port);
+  } else if (commander.args[0] === 'resource') {
+    port = process.env.API_PORT || port
+    apiServer.start(port);
+  
+  } else if (commander.args[0] === 'all') {
+    port = process.env.OAUTH_PORT || port
+    authorizationServer.start(port);
 
-  errorHandlers() {
-    this.app.use((err, req, res, next) => {
-      console.error(err.stack);
-      res.status(500).send('Something broke!');
-    });
-  }
-
-  start(apiPort, authPort) {
-    this.app.listen(apiPort, () => {
-      console.log(`Server is listening on port ${apiPort}`);
-    });
+    port = process.env.API_PORT || port
+    apiServer.start(port);
+  } else {
+    console.error(`Invalid command: ${commander.args[0]}`);
+    commander.help();
   }
 }
-
-const app = new App();
-
-app.start(3000);

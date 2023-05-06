@@ -1,0 +1,7 @@
+CREATE TABLE clients (
+  id INT NOT NULL AUTO_INCREMENT,
+  client_id VARCHAR(255) NOT NULL,
+  client_secret VARCHAR(255) NOT NULL,
+  redirect_uris TEXT NOT NULL,
+  PRIMARY KEY (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
