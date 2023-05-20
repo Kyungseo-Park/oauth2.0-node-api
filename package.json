@@ -26,6 +26,10 @@
     "eslint-config-google": "^0.14.0",
     "eslint-plugin-import": "^2.27.5",
     "eslint-plugin-jsdoc": "^43.1.1",
-    "eslint-plugin-promise": "^6.1.1"
-  }
+    "eslint-plugin-promise": "^6.1.1",
+    "lerna": "^6.6.2"
+  },
+  "workspaces": [
+    "packages/*"
+  ]
 }

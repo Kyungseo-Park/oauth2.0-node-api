@@ -1,0 +1,26 @@
+{
+  "name": "resource-server",
+  "version": "0.0.0",
+  "description": "> TODO: description",
+  "author": "Kyungseo-Park <troublesome.dev@gmail.com>",
+  "homepage": "https://github.com/Kyungseo-Park/oauth2.0-node-api#readme",
+  "license": "ISC",
+  "main": "lib/resource-server.js",
+  "directories": {
+    "lib": "lib",
+    "test": "__tests__"
+  },
+  "files": [
+    "lib"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Kyungseo-Park/oauth2.0-node-api.git"
+  },
+  "scripts": {
+    "test": "node ./__tests__/resource-server.test.js"
+  },
+  "bugs": {
+    "url": "https://github.com/Kyungseo-Park/oauth2.0-node-api/issues"
+  }
+}
