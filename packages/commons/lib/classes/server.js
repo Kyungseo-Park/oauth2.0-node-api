@@ -8,8 +8,6 @@ class Server {
   constructor() {
     this.app = express();
     this.middleWares();
-    this.routes();
-    this.errorHandlers();
   }
 
   middleWares() {
@@ -22,12 +20,7 @@ class Server {
   addRouter(path, router) {
     this.app.use(path, router);
   }
-  // routes(routers = []) {
-  //   routers.forEach(router => {
-  //       this.app.use(router.path, router.router);
-  //   });
-  // }
-
+  
   errorHandlers() {
     this.app.use((err, req, res, next) => {
       console.error(err.stack);

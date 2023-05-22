@@ -1,4 +1,4 @@
-const ResourceController = require('../controllers/resourceController');
+const ResourceController = require('resource-server/lib/controllers/resourceController');
 
 const express = require('express');
 const router = express.Router();
