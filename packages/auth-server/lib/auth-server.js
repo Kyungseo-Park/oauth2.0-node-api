@@ -3,7 +3,6 @@
 const express = require('express');
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
-const mysql = require('mysql2');
 
 const authorizationRouter = require('./routes/authRoute');
 
@@ -34,7 +33,9 @@ class AuthServer {
     }
 
     start() {
-        this.app.listen(process.env.AUTH_SERVER_PORT, () => {
+        const port = process.env.AUTH_SERVER_PORT;
+
+        this.app.listen(port, () => {
             console.log(`Server is listening on port ${port}`);
         });
     }

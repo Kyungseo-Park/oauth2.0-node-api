@@ -57,5 +57,4 @@ class AuthController {
     }
 }
 
-const authController = AuthController.getInstance();
-module.exports = authController;
+module.exports = new AuthController();
