@@ -1,11 +1,10 @@
 {
-  "name": "auth-server",
+  "name": "commons",
   "version": "0.0.0",
   "description": "> TODO: description",
   "author": "Kyungseo-Park <troublesome.dev@gmail.com>",
   "homepage": "https://github.com/Kyungseo-Park/oauth2.0-node-api#readme",
   "license": "ISC",
-  "main": "lib/auth-server.js",
   "directories": {
     "lib": "lib",
     "test": "__tests__"
@@ -17,14 +16,7 @@
     "type": "git",
     "url": "git+https://github.com/Kyungseo-Park/oauth2.0-node-api.git"
   },
-  "scripts": {
-    "dev": "nodemon ./lib/auth-server.js",
-    "test": "node ./__tests__/auth-server.test.js"
-  },
   "bugs": {
     "url": "https://github.com/Kyungseo-Park/oauth2.0-node-api/issues"
-  },
-  "dependencies": {
-    "commons": "*"
   }
 }

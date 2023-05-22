@@ -23,5 +23,8 @@
   },
   "bugs": {
     "url": "https://github.com/Kyungseo-Park/oauth2.0-node-api/issues"
+  },
+  "dependencies": {
+    "commons": "*"
   }
 }
