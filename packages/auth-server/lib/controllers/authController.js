@@ -14,6 +14,18 @@ class AuthController {
         return AuthController.instance;
     }
 
+    signup(req, res) {
+        const { email, password } = req.body;
+
+        res.json({ message: 'signup' });
+    }
+
+    login(req, res) {
+        const { grant_type, username, password } = req.body;
+
+        res.json({ message: 'login' });
+    }
+
     /**
      * response_type: 사용자 동의 시 인증 코드를 요청하기 위해 "code"로 설정
      * client_id: 클라이언트 애플리케이션의 고유 식별자
@@ -24,7 +36,7 @@ class AuthController {
         const { client_id, redirect_uri, response_type, scope } = req.query;
 
         // 사용자 인증 및 동의 페이지 렌더링
-        req.json({ message: 'authorize' });
+        res.json({ message: 'authorize' });
     }
 
     /**
@@ -38,7 +50,7 @@ class AuthController {
         const { grant_type, code, client_id, client_secret, redirect_uri } = req.body;
         
         // 액세스 토큰, 토큰 유효 기간 등의 응답 데이터
-        req.json({
+        res.json({
             access_token: 'access_token',
             token_type: 'Bearer',
             expires_in: 3600,
@@ -49,7 +61,7 @@ class AuthController {
         // 요청 해더에서 토큰을 가져옴
         const { authorization } = req.headers;
 
-        req.json({
+        res.json({
             name: 'name',
             email: 'email',
             picture: 'picture',

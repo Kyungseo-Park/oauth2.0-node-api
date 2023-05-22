@@ -17,7 +17,7 @@ class ResourceController {
     getResource(req, res) {
         const { authorization } = req.headers;
 
-        req.json({
+        res.json({
             name: 'name',
             email: 'email',
             picture: 'picture',
