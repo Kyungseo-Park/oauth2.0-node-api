@@ -1,12 +1,16 @@
-'use strict';
+const jwt = require('jsonwebtoken');
+const qs = require('qs');
+const axios = require('axios');
+const AuthService = require('../services/authService');
 
-class AuthServer {
+
+class AuthController {
     constructor() {
-        if (!AuthServer.instance) {
-            AuthServer.instance = this;
+        if (!AuthController.instance) {
+            AuthController.instance = this;
         }
     
-        return AuthServer.instance;        
+        return AuthController.instance;        
     }
 
     async signup(req, res) {
@@ -95,4 +99,4 @@ class AuthServer {
     };
 }
 
-module.exports = new AuthServer();;
+module.exports = new AuthController();;
