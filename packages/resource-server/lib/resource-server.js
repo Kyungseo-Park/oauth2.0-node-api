@@ -3,9 +3,8 @@
 const express = require('express');
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
-const mysql = require('mysql2');
 
-const authorizationRouter = require('./routes/authRoute');
+const resourceRouter = require('./routes/resourceRoute');
 
 class ResourceServer {
   constructor() {
@@ -13,23 +12,6 @@ class ResourceServer {
     this.middleWares();
     this.routes();
     this.errorHandlers();
-
-    this.pool = mysql.createPool({
-      host: process.env.OAUTH_DB_HOST,
-      user: process.env.OAUTH_DB_USER,
-      password: process.env.OAUTH_DB_PASSWORD,
-      database: process.env.OAUTH_DB_DATABASE,
-      connectionLimit: 10,
-    });
-
-    this.pool.getConnection((err, connection) => {
-      if (err) {
-        console.error('Error connecting to database: ', err);
-      } else {
-        console.log('Database connected');
-        connection?.release();
-      }
-    });
   }
 
   middleWares() {
@@ -40,19 +22,7 @@ class ResourceServer {
   }
 
   routes() {
-    this.app.post('/client', async (req, res) => {
-      const { redirect_uris } = req.body;
-      const clientId = crypto.randomBytes(16).toString('hex');
-      const clientSecret = crypto.randomBytes(16).toString('hex');
-      const id = uuid.v4();
-      try {
-        await this.pool.query('INSERT INTO clients (id, client_id, client_secret, redirect_uris) VALUES (?, ?, ?, ?)');
-        res.json({ id, clientId, clientSecret, redirect_uris });   
-      } catch (error) {
-        console.error(err);
-        res.status(500).json({ error: 'server_error' });
-      }
-    });
+    this.app.use('/api/resource/v1', resourceRouter);
   }
 
   errorHandlers() {
@@ -62,7 +32,9 @@ class ResourceServer {
     });
   }
 
-  start(port) {
+  start() {
+    const port = process.env.RESOURCE_SERVER_PORT;
+
     this.app.listen(port, () => {
       console.log(`Server is listening on port ${port}`);
     });

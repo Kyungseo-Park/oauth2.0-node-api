@@ -1,14 +1,18 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const userRepository = require('../repositories/userRepository');
+const ResourceRepository = require('../repositories/resourceRepository');
 
-class AuthService {
+class ResourceService {
   constructor() {
-    if (!AuthService.instance) {
-      AuthService.instance = this;
+    this.resourceRepository = ResourceRepository.getInstance();
+  }
+
+  async getInstance() {
+    if (!ResourceService.instance) {
+      ResourceService.instance = new ResourceService();
     }
 
-    return AuthService.instance;
+    return ResourceService.instance;
   }
 
   validateUsernameAndPassword(username, password) {
@@ -111,4 +115,4 @@ class AuthService {
   }
 }
 
-module.exports = new AuthService();
+module.exports = new ResourceService();
