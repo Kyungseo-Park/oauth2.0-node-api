@@ -18,6 +18,7 @@
     "url": "git+https://github.com/Kyungseo-Park/oauth2.0-node-api.git"
   },
   "scripts": {
+    "dev": "nodemon ./lib/auth-server.js",
     "test": "node ./__tests__/auth-server.test.js"
   },
   "bugs": {
