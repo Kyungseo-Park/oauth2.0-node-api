@@ -1,102 +1,61 @@
-const jwt = require('jsonwebtoken');
-const qs = require('qs');
-const axios = require('axios');
 const AuthService = require('../services/authService');
 
 
 class AuthController {
     constructor() {
+        this.authService = AuthService.getInstance();
+    }
+
+    getInstance() {
         if (!AuthController.instance) {
-            AuthController.instance = this;
+            AuthController.instance = new AuthController();
         }
-    
-        return AuthController.instance;        
+
+        return AuthController.instance;
     }
 
-    async signup(req, res) {
-        const { username, password } = req.body;
+    /**
+     * response_type: 사용자 동의 시 인증 코드를 요청하기 위해 "code"로 설정
+     * client_id: 클라이언트 애플리케이션의 고유 식별자
+     * redirect_uri: 사용자 동의 후 리디렉션할 클라이언트의 URI
+     * scope: 요청된 리소스에 대한 액세스 권한 범위
+     */
+    authorize(req, res) {
+        const { client_id, redirect_uri, response_type, scope } = req.query;
+
+        // 사용자 인증 및 동의 페이지 렌더링
+        req.json({ message: 'authorize' });
+    }
+
+    /**
+     * grant_type: 인가 코드 교환 시 "authorization_code"로 설정
+     * code: 인가 코드
+     * client_id: 클라이언트 애플리케이션의 고유 식별자
+     * client_secret: 클라이언트 애플리케이션의 비밀 키
+     * redirect_uri: 사용자 동의 후 리디렉션된 클라이언트의 URI
+     */
+    token(req, res) {
+        const { grant_type, code, client_id, client_secret, redirect_uri } = req.body;
         
-        AuthService.validateUsernameAndPassword(username, password);
-
-        AuthService.signup(username, password);
-
-        res.status(201).json({ message: 'User created successfully' });
+        // 액세스 토큰, 토큰 유효 기간 등의 응답 데이터
+        req.json({
+            access_token: 'access_token',
+            token_type: 'Bearer',
+            expires_in: 3600,
+        })
     }
 
-    // OAuth 2.0 인증 서버로 리다이렉트합니다.
-    async login(req, res) {
-        try {
-            const { grant_type, username, password, refresh_token} = req.body;
-            if (grant_type === 'password') {
-                await AuthService.validateLoginByGrantTypePassword(username, password);
+    userInfo(req, res) {
+        // 요청 해더에서 토큰을 가져옴
+        const { authorization } = req.headers;
 
-                const accessToken = await AuthService.createAccessToken(username);
-            
-                res.json({ access_token: accessToken, token_type: 'Bearer', expires_in: 3600, scope: ['read', 'write'] });
-            } else if (grant_type === 'refresh_token') {
-                await AuthService.validateLoginByGrantTypeRefreshToken(refresh_token);
-
-                const accessToken = await AuthService.createAccessTokenByRefreshToken(refresh_token);
-
-                const data = { 
-                    access_token: accessToken, 
-                    token_type: 'Bearer', 
-                    expires_in: 3600, 
-                    scope: 'read, write'
-                };
-                res.json(data);
-            } else {
-                return res.status(400).json({ error: 'unsupported_grant_type' });
-            }
-        } catch (err) {
-            throw new Error(err);
-        }
+        req.json({
+            name: 'name',
+            email: 'email',
+            picture: 'picture',
+        });
     }
-
-    async auth(req, res) {
-        const params = {
-            client_id: process.env.CLIENT_ID,
-            redirect_uri: process.env.REDIRECT_URI,
-            response_type: 'code',
-            scope: 'read write',
-          };
-      
-        const authUrl = `${process.env.AUTH_URL}?${qs.stringify(params)}`;
-        res.redirect(authUrl);
-    }
-
-    // 콜백 라우팅
-    async callback(req, res) {
-        const code = req.query.code;
-  
-        const params = {
-            grant_type: 'authorization_code',
-            code: code,
-            redirect_uri: process.env.REDIRECT_URI,
-            client_id: process.env.CLIENT_ID,
-            client_secret: process.env.CLIENT_SECRET,
-        };
-  
-        // 액세스 토큰 요청
-        try {
-            const { data } = await axios.post(process.env.TOKEN_URL, qs.stringify(params));
-            const accessToken = data.access_token;
-    
-            const decodedToken = jwt.verify(accessToken, JWT_SECRET_KEY);
-      
-            res.json({ access_token: accessToken, user_id: decodedToken.userId });
-            // // 클라이언트가 API 를 호출한다면 아래처럼 됨
-            // const { data: result } = await axios.get(API_URL, {
-            //     headers: {
-            //     Authorization: `Bearer ${accessToken}`,
-            //     },
-            // });
-            // res.json(result);
-        } catch (err) {
-            console.error(err);
-            res.status(500).send('Something went wrong!');
-        }
-    };
 }
 
-module.exports = new AuthController();;
+const authController = AuthController.getInstance();
+module.exports = authController;
