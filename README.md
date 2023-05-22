@@ -12,13 +12,13 @@ Lerna를 사용하여 OAuth 2.0 서비스를 개발하는 모노레포 프로젝
 ## 시작하기
 
 ```shell
-npm install -g lerna
 git clone git@github.com:Kyungseo-Park/oauth2.0-node-api.git
 cd oauth2.0-node-api
 ```
 
 Learn 개발환경 실행
 ```
+npm install -g lerna
 lerna bootstrap
 lerna run dev
 ```
