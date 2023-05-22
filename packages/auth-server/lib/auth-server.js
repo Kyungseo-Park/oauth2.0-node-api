@@ -23,19 +23,7 @@ class AuthServer {
     }
 
     routes() {
-        this.app.post('/client', async (req, res) => {
-            const { redirect_uris } = req.body;
-            const clientId = crypto.randomBytes(16).toString('hex');
-            const clientSecret = crypto.randomBytes(16).toString('hex');
-            const id = uuid.v4();
-            try {
-            await this.pool.query('INSERT INTO clients (id, client_id, client_secret, redirect_uris) VALUES (?, ?, ?, ?)');
-            res.json({ id, clientId, clientSecret, redirect_uris });   
-            } catch (error) {
-            console.error(err);
-            res.status(500).json({ error: 'server_error' });
-            }
-        });
+        this.app.use('/api/auth/v1', authorizationRouter);
     }
 
     errorHandlers() {
