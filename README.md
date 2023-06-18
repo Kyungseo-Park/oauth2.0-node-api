@@ -3,6 +3,8 @@
 Lerna를 사용하여 OAuth 2.0 서비스를 개발하는 모노레포 프로젝트입니다. 
 
 이 프로젝트는 인증 서버(AuthServer)와 리소스 서버(ResourceServer)가 포함되어 있습니다. 
+## OAuth 2.0 의 기본 개념
+
 
 ## 프로젝트 구조
 
@@ -16,14 +18,14 @@ git clone git@github.com:Kyungseo-Park/oauth2.0-node-api.git
 cd oauth2.0-node-api
 ```
 
-Learn 개발환경 실행
+Lerna 개발환경 실행
 ```
 npm install -g lerna
 lerna bootstrap
 lerna run dev
 ```
 
-## Learn 
+## Lerna 
  - 
 
 ## 배포하기

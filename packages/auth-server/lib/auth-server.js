@@ -8,7 +8,7 @@ class AuthServer {
     this.server = new Server();
     this.server.addRouter('/api/auth/v1', authorizationRouter);
     this.server.errorHandlers();
-    this.server.start(process.env.AUTH_SERVER_PORT);
+    this.server.start(process.env.AUTH_SERVER_PORT, 'Auth Server');
   }
 }
 

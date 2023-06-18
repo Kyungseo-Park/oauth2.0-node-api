@@ -8,7 +8,7 @@ class ResourceServer {
     this.server = new Server();
     this.server.addRouter('/api/resource/v1', resourceRouter);
     this.server.errorHandlers();
-    this.server.start(process.env.RESOURCE_SERVER_PORT);
+    this.server.start(process.env.RESOURCE_SERVER_PORT, 'Resource Server');
   }
 }
 

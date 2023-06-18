@@ -30,7 +30,7 @@ class Server {
 
   start(port, serviceName) {
     this.app.listen(port, () => {
-      console.log(`${serviceName} is listening on port ${port}`);
+      console.log(`${serviceName} is listening on port http://127.0.0.1:${port}`);
     });
   }
 }
