@@ -1,48 +1,65 @@
 const argon2 = require('argon2');
 const { BadRequest } = require('commons/lib/middleware/errors');
-const RabbitMQ = require('commons/lib/config/rabbitmq');
+const RabbitMQ = require('commons/lib/classes/rabbitmq.client');
 const AuthRepository = require('../repositories/authRepository');
 
-
 class AuthService {
-    constructor() {
-      this.authRepository = AuthRepository.getInstance();
-      this.rabbitmq = RabbitMQ.getInstance();
+  constructor() {
+    this.authRepository = AuthRepository.getInstance();
+    this.rabbitmq = RabbitMQ.getInstance();
+  }
+
+  getInstance() {
+    if (!AuthService.instance) {
+      AuthService.instance = new AuthService();
     }
 
-    getInstance() {
-        if (!AuthService.instance) {
-            AuthService.instance = new AuthService();
-        }
+    return AuthService.instance;
+  }
 
-        return AuthService.instance;
+  async sendMailToQueue(userId, email) {
+    try {
+      await this.rabbitmq.connect();
+  
+      const queueName = 'email_queue';
+      const queueMessage = {
+        userId,
+        email,
+      };
+
+      const messageBuffer = Buffer.from(JSON.stringify(queueMessage));
+
+      await this.rabbitmq.sendToQueue(queueName, messageBuffer);
+    } catch (error) {
+      console.error('Error occurred during example usage:', error);
+    } finally {
+      await this.rabbitmq.close();
     }
+  }
 
-    async sendMailToQueue() {
-        const queueName = 'email_queue'; // 큐 이름
-
-        const queueMessage = {
-          userId: user.id,
-          email: user.email,
-        };
-
-        this.rabbitmq.sendToQueue(queueName, Buffer.from(JSON.stringify(queueMessage)));
+  async validatorByEmail(email) {
+    const result = await this.authRepository.findByEmail(email);
+    if (result && result.rowCount > 0) {
+      throw new BadRequest({ email: 'exists' });
     }
+  }
 
-    async validatorByEmail(email) {
-        const result = await this.authRepository.findByEmail(email);
-        if (result.rowCount > 0) {
-            throw new BadRequest({email: 'exists'});
-        }
-    }
+  async signup(params) {
+    const { email, password, first_name, middle_name, last_name } = params;
 
-    async signup(params) {
-        // NOTE: 이미 존재하는지 이메일인지 검사는 사용자 이메일의 유출에 대한 문제로 인해 생략 
-        await this.validatorByEmail(params.email);
-        params.password = await argon2.hash(params.password);
+    await this.validatorByEmail(email);
+    const hashedPassword = await argon2.hash(password);
 
-        return this.authRepository.signup(params);
-    }
+    const user = {
+      email,
+      password: hashedPassword,
+      first_name,
+      middle_name,
+      last_name,
+    };
+
+    return this.authRepository.signup(user);
+  }
 }
 
 module.exports = new AuthService();

@@ -9,13 +9,10 @@ class Database {
     this.isClosing = false;
 
     process.on('exit', () => {
-        console.log("Process is exiting");
         this.close();
     });
 
     process.on('SIGINT', () => {
-        this.close();
-        console.log("SIGINT received");
         process.exit(1);
     });
   }

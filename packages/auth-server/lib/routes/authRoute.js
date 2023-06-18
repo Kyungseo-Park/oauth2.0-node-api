@@ -1,4 +1,4 @@
-const AuthService = require('auth-server/lib/services/AuthService');
+const AuthService = require('../services/authService');
 const {validatorRequestParams, validatorByEmail, validatorByPassword} = require("commons/lib/utils/validator");
 const express = require('express');
 
@@ -21,9 +21,9 @@ const signup = async (req, res, next) => {
         // 회원가입 로직
         const userInfo = await authService.signup(req.body);
 
-        const sendMail = authService.sendMailToQueue(userInfo);
+        await authService.sendMailToQueue(userInfo.id, userInfo.email);
 
-        res.json({ data: result });
+        res.json({ data: 'success' });
     } catch (error) {
         next(error);
     }

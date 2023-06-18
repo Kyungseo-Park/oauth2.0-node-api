@@ -29,7 +29,7 @@ class AuthRepository {
 
     async signup(params) {
         const { email, password, first_name, middle_name, last_name } = params;
-        const fields = {};
+
         const keys = [];
         const values = [];
         
@@ -61,7 +61,7 @@ class AuthRepository {
         const query = sql.type('id')`
             INSERT INTO oauth_users (${sql.join(keys, `, `)})
             VALUES (${sql.join(values.map(value => `${value}`), `, `)})
-            RETURNING id
+            RETURNING id, email
         `;
 
         const result = await this.pg.query(query);

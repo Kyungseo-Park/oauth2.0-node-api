@@ -1,6 +1,5 @@
 require('dotenv').config();
 
-console.log(process.env);
 const authDbConfig = {
     host: process.env.AUTH_DATABASE_HOST,
     port: process.env.AUTH_DATABASE_PORT,
