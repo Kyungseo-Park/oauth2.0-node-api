@@ -3,6 +3,14 @@
 const express = require('express');
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
+const {
+  BadRequest,
+  Unauthorized,
+  Forbidden,
+  InternalServerError,
+  NotFound,
+} = require("commons/lib/middleware/errors");
+
 
 class Server {
   constructor() {
@@ -20,11 +28,30 @@ class Server {
   addRouter(path, router) {
     this.app.use(path, router);
   }
-  
+
   errorHandlers() {
+    // 에러 핸들러 등록
     this.app.use((err, req, res, next) => {
-      console.error(err.stack);
-      res.status(500).send('Something broke!');
+      if (err instanceof BadRequest) {
+        res.status(err.code).send({ message: err.message, errors: err.data });
+        return;
+      } else if (err instanceof Unauthorized) {
+        res.status(err.code).send({ message: err.message, errors: err.data });
+        return;
+      } else if (err instanceof Forbidden) {
+        res.status(err.code).send({ message: err.message, errors: err.data });
+        return;
+      } else if (err instanceof InternalServerError) {
+        res.status(err.code).send({ message: err.message, errors: err.data });
+        return;
+      } else if (err instanceof NotFound) {
+        res.status(err.code).send();
+        return;
+      } else {
+        console.error(err);
+        res.status(500).send({ message: "INTERNAL_SERVER_ERROR" });
+        return;
+      }
     });
   }
 

@@ -1,5 +1,5 @@
 const AuthService = require('../services/authService');
-
+const {validatorRequestParams} = require("commons/lib/utils/validator");
 
 class AuthController {
     constructor() {
@@ -15,7 +15,11 @@ class AuthController {
     }
 
     signup(req, res) {
-        const { email, password } = req.body;
+        const requireParams = ['email', 'password', 'password_confirmation', 'username'];
+        
+        validatorRequestParams(req.body, requireParams);
+
+        const { email, password, password_confirmation, username} = req.body;
 
         res.json({ message: 'signup' });
     }
