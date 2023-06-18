@@ -19,7 +19,9 @@ const signup = async (req, res, next) => {
         validatorByPassword(password, password_confirmation);
 
         // 회원가입 로직
-        const result = await authService.signup(req.body);
+        const userInfo = await authService.signup(req.body);
+
+        const sendMail = authService.sendMailToQueue(userInfo);
 
         res.json({ data: result });
     } catch (error) {

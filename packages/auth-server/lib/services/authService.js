@@ -1,11 +1,13 @@
 const argon2 = require('argon2');
 const { BadRequest } = require('commons/lib/middleware/errors');
+const RabbitMQ = require('commons/lib/config/rabbitmq');
 const AuthRepository = require('../repositories/authRepository');
 
 
 class AuthService {
     constructor() {
       this.authRepository = AuthRepository.getInstance();
+      this.rabbitmq = RabbitMQ.getInstance();
     }
 
     getInstance() {
@@ -14,6 +16,17 @@ class AuthService {
         }
 
         return AuthService.instance;
+    }
+
+    async sendMailToQueue() {
+        const queueName = 'email_queue'; // 큐 이름
+
+        const queueMessage = {
+          userId: user.id,
+          email: user.email,
+        };
+
+        this.rabbitmq.sendToQueue(queueName, Buffer.from(JSON.stringify(queueMessage)));
     }
 
     async validatorByEmail(email) {
