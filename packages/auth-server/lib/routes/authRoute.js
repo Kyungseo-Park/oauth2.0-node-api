@@ -8,17 +8,20 @@ const authService = AuthService.getInstance();
 
 const signup = async (req, res, next) => {
     try {
-        const requireParams = ['email', 'password', 'password_confirmation', 'username'];
+        const requireParams = ['email', 'password', 'password_confirmation', 'last_name', 'first_name'];
         
         validatorRequestParams(req.body, requireParams);
 
-        const { email, password, password_confirmation, username } = req.body;
+        const { email, password, password_confirmation } = req.body;
 
         validatorByEmail(email);
 
         validatorByPassword(password, password_confirmation);
 
-        res.json({ message: 'signup' });
+        // 회원가입 로직
+        const result = await authService.signup(req.body);
+
+        res.json({ data: result });
     } catch (error) {
         next(error);
     }
