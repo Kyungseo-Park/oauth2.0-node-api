@@ -1,18 +1,12 @@
 const { sql } = require('slonik');
+const { authDbConfig } = require('commons/lib/config/database'); 
 
 const Database = require('commons/lib/classes/pg.client');
 
 
 class AuthRepository {
     constructor() {
-        const config = {
-            host: 'localhost',
-            port: 5432,
-            username: 'postgres',
-            database: 'oauth',
-            password: 'YX9SXN8U_6LYMS',
-        };
-        this.pg = new Database(config);
+        this.pg = new Database(authDbConfig);
     }
 
     getInstance() {

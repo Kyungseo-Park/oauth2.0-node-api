@@ -25,6 +25,7 @@
     "url": "https://github.com/Kyungseo-Park/oauth2.0-node-api/issues"
   },
   "dependencies": {
-    "commons": "*"
+    "commons": "*",
+    "dotenv": "^16.3.1"
   }
 }
