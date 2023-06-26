@@ -28,6 +28,7 @@
     "url": "https://github.com/Kyungseo-Park/oauth2.0-node-api/issues"
   },
   "dependencies": {
+    "@aws-sdk/client-sns": "^3.359.0",
     "aws-sdk": "^2.1404.0"
   }
 }

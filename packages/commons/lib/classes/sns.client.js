@@ -1,19 +1,18 @@
 const { awsConfig } = require('../config/aws');
-const AWS = require('aws-sdk');
+const { SNS } = require("@aws-sdk/client-sns");
 
-class SNS {
+class SNSClient {
   constructor(snsTopicArn) {
-    this.aws = AWS.config.update(awsConfig);
-    this.sns = new AWS.SNS();
+    this.sns = new SNS(awsConfig);
     this.snsTopicArn = snsTopicArn;
   }
 
   static getInstance(snsTopicArn) {
-    if (!SNS.instance) {
-      SNS.instance = new SNS(snsTopicArn);
+    if (!SNSClient.instance) {
+      SNSClient.instance = new SNSClient(snsTopicArn);
     }
 
-    return SNS.instance;
+    return SNSClient.instance;
   }
 
   sendSMS(emailData) {
@@ -33,4 +32,4 @@ class SNS {
   }
 }
 
-module.exports = SNS;
+module.exports = SNSClient;

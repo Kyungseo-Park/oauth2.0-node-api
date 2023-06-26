@@ -1,9 +1,9 @@
-const SNS = require('commons/lib/classes/sns.client');
+const SNSClient = require('commons/lib/classes/sns.client');
 const RabbitMQ = require('commons/lib/classes/rabbitmq.client');
 
 class MailWorker {
   constructor(snsTopicArn) {
-    this.sns = SNS.getInstance(snsTopicArn);
+    this.sns = SNSClient.getInstance(snsTopicArn);
     this.rabbitMQ = RabbitMQ.getInstance();
   }
 
@@ -25,13 +25,13 @@ class MailWorker {
 
         this.sns.sendSMS(emailData);
 
-        await this.rabbitMQ.channel.ack(emailData);
+        // 큐 메시지 삭제
+        await this.rabbitMQ.channel.ack('email_queue');
+        console.log('Email worker finished.');
       } else {
         console.log('No email messages in the queue.');
       }
-
       await this.rabbitMQ.channel.close();
-      console.log('Email worker finished.');
     } catch (error) {
       console.error('Error:', error);
     }
