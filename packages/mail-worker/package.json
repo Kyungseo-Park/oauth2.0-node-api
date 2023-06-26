@@ -21,9 +21,13 @@
     "url": "git+https://github.com/Kyungseo-Park/oauth2.0-node-api.git"
   },
   "scripts": {
+    "dev": "nodemon ./lib/mail-worker.js",
     "test": "node ./__tests__/mail-worker.test.js"
   },
   "bugs": {
     "url": "https://github.com/Kyungseo-Park/oauth2.0-node-api/issues"
+  },
+  "dependencies": {
+    "aws-sdk": "^2.1404.0"
   }
 }
