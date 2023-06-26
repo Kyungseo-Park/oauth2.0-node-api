@@ -32,14 +32,15 @@ class RabbitMQ {
 
   async sendToQueue(queueName, message) {
     try {
+      await this.connect();
       // 큐 선언
       await this.channel.assertQueue(queueName);
-    
       // 메시지 전송
       this.channel.sendToQueue(queueName, Buffer.from(message));
     } catch (error) {
-      console.error('Error queue to RabbitMQ:', error);
       throw error;
+    }finally {
+      await this.close();
     }
   }
 

@@ -6,7 +6,7 @@ const AuthRepository = require('../repositories/authRepository');
 class AuthService {
   constructor() {
     this.authRepository = AuthRepository.getInstance();
-    this.rabbitmq = RabbitMQ.getInstance();
+    this.rabbitMQ = RabbitMQ.getInstance();
   }
 
   getInstance() {
@@ -19,8 +19,6 @@ class AuthService {
 
   async sendMailToQueue(userId, email) {
     try {
-      await this.rabbitmq.connect();
-  
       const queueName = 'email_queue';
       const queueMessage = {
         userId,
@@ -29,11 +27,9 @@ class AuthService {
 
       const messageBuffer = Buffer.from(JSON.stringify(queueMessage));
 
-      await this.rabbitmq.sendToQueue(queueName, messageBuffer);
+      await this.rabbitMQ.sendToQueue(queueName, messageBuffer);
     } catch (error) {
       console.error('Error occurred during example usage:', error);
-    } finally {
-      await this.rabbitmq.close();
     }
   }
 
