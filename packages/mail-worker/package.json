@@ -1,0 +1,29 @@
+{
+  "name": "mail-worker",
+  "version": "1.0.0",
+  "description": "메일 발송 서비스를 담당함",
+  "keywords": [
+    "mail"
+  ],
+  "author": "Kyungseo-Park <troublesome.dev@gmail.com>",
+  "homepage": "https://github.com/Kyungseo-Park/oauth2.0-node-api#readme",
+  "license": "ISC",
+  "main": "lib/mail-worker.js",
+  "directories": {
+    "lib": "lib",
+    "test": "__tests__"
+  },
+  "files": [
+    "lib"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Kyungseo-Park/oauth2.0-node-api.git"
+  },
+  "scripts": {
+    "test": "node ./__tests__/mail-worker.test.js"
+  },
+  "bugs": {
+    "url": "https://github.com/Kyungseo-Park/oauth2.0-node-api/issues"
+  }
+}
